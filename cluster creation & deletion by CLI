@@ -1,0 +1,104 @@
+Creating and Destroying GKE Clusters via CLI
+This document outlines the steps to create and destroy Google Kubernetes Engine (GKE) clusters using the gcloud command-line tool.
+
+Prerequisites
+A Google Cloud Platform (GCP) account with billing enabled.
+The Google Cloud SDK (gcloud) installed and configured on your local machine.
+The kubectl command-line tool installed on your local machine.
+1. Creating a GKE Cluster via CLI
+Authenticate with GCP:
+gcloud auth login
+Set Project ID:
+gcloud config set project <your-project-id>
+Replace <your-project-id> with your GCP project ID.
+
+Set Compute Zone (or Region):
+For a zonal cluster:
+
+gcloud config set compute/zone <your-zone>
+Example: gcloud config set compute/zone us-central1-a
+
+For a regional cluster:
+
+gcloud config set compute/region <your-region>
+Example: gcloud config set compute/region us-central1
+
+Create the Cluster:
+gcloud container clusters create <cluster-name> \
+    --zone <your-zone> \
+    --num-nodes <number-of-nodes> \
+    --machine-type <machine-type> \
+    --network <your-network> \
+    --subnetwork <your-subnet> \
+    --enable-private-nodes
+or, for a regional cluster:
+
+gcloud container clusters create <cluster-name> \
+    --region <your-region> \
+    --num-nodes <number-of-nodes> \
+    --machine-type <machine-type> \
+    --network <your-network> \
+    --subnetwork <your-subnet> \
+    --enable-private-nodes
+Replace the placeholders with your desired values:
+
+<cluster-name>: The name of your cluster (e.g., my-cluster).
+<your-zone>: The zone where the cluster will be created (e.g., us-central1-a).
+<your-region>: The region where the cluster will be created (e.g., us-central1).
+<number-of-nodes>: The number of nodes in the cluster (e.g., 2).
+<machine-type>: The machine type for the nodes (e.g., e2-small).
+<your-network>: The VPC network to use (e.g., k8s-network).
+<your-subnet>: The subnet to use (e.g., private-subnet).
+--enable-private-nodes: Enables private nodes for enhanced security.
+Example (Zonal Cluster):
+
+gcloud container clusters create my-cluster \
+    --zone us-central1-a \
+    --num-nodes 2 \
+    --machine-type e2-small \
+    --network k8s-network \
+    --subnetwork private-subnet \
+    --enable-private-nodes
+Connect to the Cluster:
+gcloud container clusters get-credentials <cluster-name> --zone <your-zone> --project <your-project-id>
+or, for a regional cluster:
+
+gcloud container clusters get-credentials <cluster-name> --region <your-region> --project <your-project-id>
+Verify the Connection:
+kubectl get nodes
+This command should display the nodes in your cluster.
+
+2. Destroying a GKE Cluster via CLI
+Authenticate with GCP:
+gcloud auth login
+Set Project ID:
+gcloud config set project <your-project-id>
+Replace <your-project-id> with your GCP project ID.
+
+Set Compute Zone (or Region):
+For a zonal cluster:
+
+gcloud config set compute/zone <your-zone>
+For a regional cluster:
+
+gcloud config set compute/region <your-region>
+Delete the Cluster:
+gcloud container clusters delete <cluster-name> --zone <your-zone> --project <your-project-id>
+or, for a regional cluster:
+
+gcloud container clusters delete <cluster-name> --region <your-region> --project <your-project-id>
+Replace the placeholders with the correct values for your cluster.
+
+Confirm Deletion:
+Type y when prompted to confirm the deletion.
+
+Verify Deletion:
+gcloud container clusters list
+Your cluster should no longer appear in the list.
+
+Important Notes
+Resource Cleanup: Deleting the cluster will also delete all the resources associated with it, including nodes, disks, and load balancers.
+Billing: After the cluster is deleted, you will no longer be charged for the resources it was using. However, it's a good idea to double-check your billing statement to make sure everything has been cleaned up correctly.
+Data Backup: Ensure you have backed up any important data before deleting the cluster.
+Zonal vs. Regional: Remember to use the correct flag (--zone or --region) depending on whether you created a zonal or regional cluster.
+This document provides a quick reference for creating and destroying GKE clusters using the CLI. Remember to adapt the commands to your specific environment and needs.
