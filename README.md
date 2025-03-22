@@ -81,7 +81,6 @@ spec:
     targetPort: 8080
   selector:
     app: hello-app
-    
 Apply the Deployment:
 kubectl apply -f hello-app.yaml
 Verify the Deployment:
